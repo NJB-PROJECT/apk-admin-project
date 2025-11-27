@@ -9,10 +9,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.settingsdatabaseadmin.model.AppConfig
 import com.example.settingsdatabaseadmin.model.LogEntry
+import com.example.settingsdatabaseadmin.ui.theme.SettingsDatabaseAdminTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,6 +57,43 @@ fun DetailScreen(
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailScreenPreview() {
+    val sampleLogs = listOf(
+        LogEntry(message = "Configuration updated."),
+        LogEntry(message = "Maintenance mode enabled."),
+        LogEntry(message = "Application created.")
+    )
+    val sampleApp = com.example.settingsdatabaseadmin.model.ManagedApp(
+        packageName = "com.example.app1",
+        config = AppConfig(latestVersionName = "1.2.3", latestVersionCode = 123),
+        logs = sampleLogs
+    )
+
+    SettingsDatabaseAdminTheme {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(sampleApp.packageName) },
+                    navigationIcon = {
+                        IconButton(onClick = { }) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        }
+                    }
+                )
+            }
+        ) { paddingValues ->
+            DetailContent(
+                managedApp = sampleApp,
+                onConfigChange = { _, _ -> },
+                onDelete = {},
+                modifier = Modifier.padding(paddingValues)
+            )
         }
     }
 }

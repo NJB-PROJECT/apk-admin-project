@@ -10,9 +10,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.settingsdatabaseadmin.model.AppConfig
 import com.example.settingsdatabaseadmin.model.ManagedApp
+import com.example.settingsdatabaseadmin.ui.theme.SettingsDatabaseAdminTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,6 +88,37 @@ fun AppListItem(app: ManagedApp, onClick: () -> Unit) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = app.packageName, style = MaterialTheme.typography.titleMedium)
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MainScreenPreview() {
+    val sampleApps = listOf(
+        ManagedApp(packageName = "com.example.app1", config = AppConfig()),
+        ManagedApp(packageName = "com.example.app2", config = AppConfig(isActive = false)),
+        ManagedApp(packageName = "com.example.another.long.package.name", config = AppConfig())
+    )
+
+    SettingsDatabaseAdminTheme {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Managed Apps") }
+                )
+            },
+            floatingActionButton = {
+                FloatingActionButton(onClick = { }) {
+                    Icon(Icons.Default.Add, contentDescription = "Add App")
+                }
+            }
+        ) { paddingValues ->
+            LazyColumn(contentPadding = paddingValues) {
+                items(sampleApps) { app ->
+                    AppListItem(app = app, onClick = {})
+                }
+            }
         }
     }
 }
